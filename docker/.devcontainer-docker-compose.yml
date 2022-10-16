@@ -2,7 +2,7 @@ version: "3.6"
 
 services:
   gha-docker-environment:
-    image: mnist-demo-pipeline-dev
+    image: gha-docker-environment
     volumes:
     - .:/home/host_user/repo-root
     command:
