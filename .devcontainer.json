@@ -1,17 +1,13 @@
 // See, https://code.visualstudio.com/docs/remote/containers
 {
-  "name": "mnist-demo-pipeline dev",
+  "name": "gha-docker-environment",
   "dockerComposeFile": [
-    ".devcontainer-docker-compose.yml"
+    "docker/.devcontainer-docker-compose.yml"
   ],
-  "service": "dev-environment",
+  "service": "gha-docker-environment",
   "runServices": [],
-  "forwardPorts": [
-    8888
-  ],
+  "forwardPorts": [],
   "remoteEnv": {},
-  "extensions": [
-    "ms-python.python"
-  ],
-  "workspaceFolder": "/home/host_user/workspace",
+  "extensions": [],
+  "workspaceFolder": "/home/host_user/",
 }

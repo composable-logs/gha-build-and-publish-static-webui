@@ -1,0 +1,10 @@
+version: "3.6"
+
+services:
+  gha-docker-environment:
+    image: mnist-demo-pipeline-dev
+    volumes:
+    - .:/home/host_user/repo-root
+    command:
+    - tail -f /dev/null
+    hostname: gha-docker-environment

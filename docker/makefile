@@ -1,12 +1,8 @@
-SHELL := /bin/bash
+SHELL             := /bin/bash
+DOCKER_IMAGE_NAME := gha-docker-environment
 
-### Tasks to build Docker images
-
-build-base-env-docker-image:
-	docker \
-	    build \
-	    --file Dockerfile.base \
-	    --build-arg HOST_UID=$$(id -u) \
-	    --build-arg HOST_GID="$$(id -g)" \
-	    --tag mnist-demo-pipeline-base \
+build-docker-image:
+	docker build \
+	    --file Dockerfile \
+	    --tag $(DOCKER_IMAGE_NAME) \
 	    .

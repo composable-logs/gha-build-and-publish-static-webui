@@ -1,6 +1,9 @@
 .PHONY: *
 SHELL := /bin/bash
 
+build-docker:
+	(cd docker; make build-docker-image)
+
 # override when invoking make, eg "make RUN_ENVIRONMENT=ci ..."
 RUN_ENVIRONMENT ?= "dev"
 
