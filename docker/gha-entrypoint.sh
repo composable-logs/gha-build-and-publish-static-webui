@@ -1,19 +1,17 @@
 #!/bin/bash
 
+echo "-------------------------------------------------------"
+echo " - GITHUB_REPOSITORY              : $GITHUB_REPOSITORY "
+echo " - PYNB_DAG_RUNNER_DEPENDENCY     : $GITHUB_REPOSITORY "
+echo "-------------------------------------------------------"
+
 set -eux
 
-echo "GITHUB_REPOSITORY     : $GITHUB_REPOSITORY "
+pip install --user pynb-dag-runner-snapshot
 
-echo "--- pwd -----"
-pwd
-
-echo "--- ls ---"
-ls -la .
 
 echo "-------------------------------------------------------"
-pip freeze
 
-echo "-------------------------------------------------------"
 static_builder \
     --github_repository $GITHUB_REPOSITORY \
     --output_dir /github_workspace/www-root/pipeline-artifacts/ \

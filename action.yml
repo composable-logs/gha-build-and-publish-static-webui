@@ -7,6 +7,11 @@ inputs:
     required: false
     default: foo
 
+  pynb_dag_runner_ref:
+    description: Version of pynb-dag-runner to install
+    required: false
+    default: pynb-dag-runner-snapshot
+
 outputs:
   one-output-value:
     description: Description about output value

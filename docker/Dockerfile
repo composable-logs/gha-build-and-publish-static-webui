@@ -36,15 +36,8 @@ RUN if [ "$HOST_GID" = "" ] || [ "$HOST_UID" = "" ]; then \
         useradd --uid $HOST_UID --gid $HOST_GID -rm --shell /bin/bash host_user; \
     fi
 
-
-# --- install Python command line tool ---
-
-USER host_user
-
 # The below ensures that pip-installed command line tools are in path
 ENV PATH "/home/host_user/.local/bin:$PATH"
-
-RUN pip install --user pynb-dag-runner-snapshot
 
 
 # --- install gha entrypoint script ---
