@@ -2,14 +2,13 @@ FROM ubuntu:20.04
 
 ENV DEBIAN_FRONTEND "noninteractive"
 
-COPY gha-entrypoint.sh /home/
-
 RUN apt-get -qq -y update && \
     apt-get -qq -y upgrade && \
     apt-get -qq -y install --no-install-recommends \
         python3 \
         python3-pip \
-        make
+        make && \
+    pip install --user pynb-dag-runner-snapshot==0.0.8.dev1665829343
 
 # --- add non-root user `host_user` ---
 
@@ -35,10 +34,10 @@ RUN if [ "$HOST_GID" = "" ] || [ "$HOST_UID" = "" ]; then \
 
 USER host_user
 
-# --
+# -- install entrypoint
+
 COPY gha-entrypoint.sh /home/host_user/
 
-RUN pip install --user pynb-dag-runner-snapshot==0.0.8.dev1665829343 && \
-    chmod u+x /home/host_user/gha-entrypoint.sh
+RUN chmod u+x /home/host_user/gha-entrypoint.sh
 
-ENTRYPOINT ["/bin/bash", "-c"]
+ENTRYPOINT ["/home/host_user/gha-entrypoint.sh"]
