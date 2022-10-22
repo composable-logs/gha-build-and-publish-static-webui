@@ -2,6 +2,8 @@ FROM ubuntu:20.04
 
 ENV DEBIAN_FRONTEND "noninteractive"
 
+COPY gha-entrypoint.sh /home/
+
 RUN apt-get -qq -y update && \
     apt-get -qq -y upgrade && \
     apt-get -qq -y install --no-install-recommends \
@@ -32,5 +34,11 @@ RUN if [ "$HOST_GID" = "" ] || [ "$HOST_UID" = "" ]; then \
     fi
 
 USER host_user
+
+# --
+COPY gha-entrypoint.sh /home/host_user/
+
+RUN pip install --user pynb-dag-runner-snapshot==0.0.8.dev1665829343 && \
+    chmod u+x /home/host_user/gha-entrypoint.sh
 
 ENTRYPOINT ["/bin/bash", "-c"]
