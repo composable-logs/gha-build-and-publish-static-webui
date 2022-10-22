@@ -44,7 +44,7 @@ USER host_user
 # The below ensures that pip-installed command line tools are in path
 ENV PATH "/home/host_user/.local/bin:$PATH"
 
-RUN pip install --user pynb-dag-runner-snapshot==0.0.8.dev1665829343
+RUN pip install --user pynb-dag-runner-snapshot
 
 
 # --- install gha entrypoint script ---

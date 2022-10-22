@@ -1,5 +1,8 @@
 #!/bin/bash
+
 set -eux
+
+echo "GITHUB_REPOSITORY     : $GITHUB_REPOSITORY "
 
 echo "--- pwd -----"
 pwd
