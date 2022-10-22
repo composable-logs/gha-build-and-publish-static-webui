@@ -16,6 +16,7 @@ jobs:
       - uses: actions/checkout@v3
         with:
           repository:  pynb-dag-runner/gha-build-and-publish-static-webui
+          ref: initial-setup
           path: gha-build-and-publish-static-webui
           persist-credentials: true
 
