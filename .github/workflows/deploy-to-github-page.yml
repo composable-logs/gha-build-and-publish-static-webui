@@ -17,64 +17,96 @@ jobs:
     runs-on: ubuntu-20.04
 
     steps:
-      - uses: actions/checkout@v3
-        with:
-          # Note: without repository argument we would checkout the caller repo.
-          #
-          # See:
-          #   https://stackoverflow.com/questions/71046096
-          repository: pynb-dag-runner/gha-build-and-publish-static-webui
-          path: gha-build-and-publish-static-webui
-          persist-credentials: false
+      # - uses: actions/checkout@v3
+      #   with:
+      #     # Note: without repository argument we would checkout the caller repo.
+      #     #
+      #     # See:
+      #     #   https://stackoverflow.com/questions/71046096
+      #     repository: pynb-dag-runner/gha-build-and-publish-static-webui
+      #     path: gha-build-and-publish-static-webui
+      #     persist-credentials: false
 
-      - name: "Build Docker file"
-        working-directory: ${{ github.workspace }}/gha-build-and-publish-static-webui
-        shell: bash
-        run: |
-          printenv
-          (cd docker; make build-docker-image)
+      - uses: actions/setup-python@v4
+        with:
+          python-version: "3.8"
+
+      # - name: "Build Docker file"
+      #   working-directory: ${{ github.workspace }}/gha-build-and-publish-static-webui
+      #   shell: bash
+      #   run: |
+      #     (cd docker; make build-docker-image)
 
       - name: "Fetch all artefacts into directory tree"
-        working-directory: ${{ github.workspace }}/gha-build-and-publish-static-webui
         shell: bash
         run: |
-          # GITHUB_REPOSITORY has format owner/repo-name.
-          make in-docker/run-command \
-              DOCKER_EXTRA_FLAGS="\
-                  --volume ${{ github.workspace }}:/github_workspace \
-                  -e GITHUB_TOKEN \
-                  -e GITHUB_REPOSITORY \
-              " \
-              DOCKER_COMMAND=" \
-                  pip install \
-                      --quiet \
-                      pynb-dag-runner-snapshot==0.0.8.dev1665829343; \
-                  static_builder \
-                      --github_repository $GITHUB_REPOSITORY \
-                      --output_dir /github_workspace/www-root/pipeline-artifacts/ \
-                      --output_static_data_json /github_workspace/www-root/ui_static_data.json; \
-              "
+          pip install \
+              --quiet \
+              pynb-dag-runner-snapshot==0.0.8.dev1665829343
+
+          static_builder \
+              --github_repository $GITHUB_REPOSITORY \
+              --output_dir ${{ github.workspace }}/www-root/pipeline-artifacts/ \
+              --output_static_data_json ${{ github.workspace }}/www-root/ui_static_data.json
+
         env:
           # any Github token would work here. Also secrets.GITHUB_TOKEN
           GITHUB_TOKEN: ${{ secrets.CALLER_ACTION_GITHUB_TOKEN }}
+
+      # - name: "Fetch all artefacts into directory tree"
+      #   working-directory: ${{ github.workspace }}/gha-build-and-publish-static-webui
+      #   shell: bash
+      #   run: |
+      #     # GITHUB_REPOSITORY has format owner/repo-name.
+      #     make in-docker/run-command \
+      #         DOCKER_EXTRA_FLAGS="\
+      #             --volume ${{ github.workspace }}:/github_workspace \
+      #             -e GITHUB_TOKEN \
+      #             -e GITHUB_REPOSITORY \
+      #         " \
+      #         DOCKER_COMMAND=" \
+      #             pip install \
+      #                 --quiet \
+      #                 pynb-dag-runner-snapshot==0.0.8.dev1665829343; \
+      #             static_builder \
+      #                 --github_repository $GITHUB_REPOSITORY \
+      #                 --output_dir /github_workspace/www-root/pipeline-artifacts/ \
+      #                 --output_static_data_json /github_workspace/www-root/ui_static_data.json; \
+      #         "
+      #   env:
+      #     # any Github token would work here. Also secrets.GITHUB_TOKEN
+      #     GITHUB_TOKEN: ${{ secrets.CALLER_ACTION_GITHUB_TOKEN }}
 
       - name: "pip install package with static assets for web front end"
         working-directory: ${{ github.workspace }}/gha-build-and-publish-static-webui
         shell: bash
         run: |
-          make in-docker/run-command \
-              DOCKER_EXTRA_FLAGS="\
-                  --volume ${{ github.workspace }}:/github_workspace \
-              " \
-              DOCKER_COMMAND=" \
-                  pip install \
-                      --quiet \
-                      pynb_dag_runner_webui \
-                      --target /github_workspace/pynb_dag_runner_webui; \
-                  cp -r \
-                      /github_workspace/pynb_dag_runner_webui/assets/. \
-                      /github_workspace/www-root/; \
-              "
+          pip install \
+              --quiet \
+              pynb_dag_runner_webui \
+              --target ${{ github.workspace }}/pynb_dag_runner_webui
+
+          cp -r \
+              ${{ github.workspace }}/pynb_dag_runner_webui/assets/. \
+              ${{ github.workspace }}/www-root/
+
+      # - name: "pip install package with static assets for web front end"
+      #   working-directory: ${{ github.workspace }}/gha-build-and-publish-static-webui
+      #   shell: bash
+      #   run: |
+      #     make in-docker/run-command \
+      #         DOCKER_EXTRA_FLAGS="\
+      #             --volume ${{ github.workspace }}:/github_workspace \
+      #         " \
+      #         DOCKER_COMMAND=" \
+      #             pip install \
+      #                 --quiet \
+      #                 pynb_dag_runner_webui \
+      #                 --target /github_workspace/pynb_dag_runner_webui; \
+      #             cp -r \
+      #                 /github_workspace/pynb_dag_runner_webui/assets/. \
+      #                 /github_workspace/www-root/; \
+      #         "
 
       ###
       ### Deploy UI + data
