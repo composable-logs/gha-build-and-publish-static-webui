@@ -48,7 +48,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: "pip install package with static assets for web front end"
-        working-directory: ${{ github.workspace }}
+        working-directory: ${{ github.workspace }}/gha-build-and-publish-static-webui
         shell: bash
         run: |
           make in-docker/run-command \
