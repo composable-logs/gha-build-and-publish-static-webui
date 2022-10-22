@@ -12,17 +12,6 @@ jobs:
     name: Build and deploy static website
     runs-on: ubuntu-20.04
     steps:
-      # v ------- This block fetches all logs and builds assets for static UI ---------v
-
-      # This should be simplified: refactored into a separate gha, or makefile task?
-      #
-      # Note that the below depends on packages (see the pip install commands)
-      #
-      #   - pynb-dag-runner
-      #   - pynb_dag_runner_webui
-      #
-      # These would better be somehow installed in a docker container (to collect all
-      # dependencies into one place).
 
       - uses: actions/checkout@v3
         with:
@@ -32,7 +21,9 @@ jobs:
         working-directory: ${{ github.workspace }}
         shell: bash
         run: |
-          (cd docker; make build-base-env-docker-image)
+          ls -la .
+          (cd docker; make build-docker-image)
+          exit 1
 
       - name: "Fetch all artefacts into directory tree"
         working-directory: ${{ github.workspace }}
