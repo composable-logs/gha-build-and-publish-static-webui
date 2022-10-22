@@ -1,23 +1,31 @@
 name: Deploy pynb-dag-runner static website
 description: NA
 
-inputs:
-  a_parameter:
-    description: test parameters
-    required: false
-    default: foo
+on:
+  workflow_call:
+    inputs:
+      a_parameter:
+        description: test parameters
+        required: false
+        default: foo
+        type: string
 
-  pynb_dag_runner_ref:
-    description: Version of pynb-dag-runner to install
-    required: false
-    default: pynb-dag-runner-snapshot
+      pynb_dag_runner_ref:
+        description: Version of pynb-dag-runner to install
+        required: false
+        default: pynb-dag-runner-snapshot
+        type: string
 
-outputs:
-  one-output-value:
-    description: Description about output value
+#outputs:
+#  one-output-value:
+#    description: Description about output value
 
-runs:
-  using: docker
-  image: docker/Dockerfile
-  args:
-    - ${{ inputs.a-parameter }}
+jobs:
+  deploy-static-website:
+    runs-on: ubuntu-20:04
+    steps:
+    - shell: bash
+      run: echo Hello ${{ inputs.a_parameter }}.
+
+    - shell: bash
+      run: echo Hello ${{ inputs.a_parameter }}.
