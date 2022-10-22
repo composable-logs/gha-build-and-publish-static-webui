@@ -1,6 +1,6 @@
-name: "Reusable workflow to update static website"
+name: "Reusable workflow to deploy static website"
 
-# References on reusable workflows:
+# Details on reusable workflows:
 # - https://docs.github.com/en/actions/using-workflows/reusing-workflows
 # - https://github.community/t/cant-call-reusable-workflow-unexpected-value-uses/204182
 
@@ -13,16 +13,20 @@ on:
 
 jobs:
   update-static-website:
-    name: Build and deploy static website
+    name: Building assets to deploy as static website
     runs-on: ubuntu-20.04
 
     steps:
       - uses: actions/checkout@v3
         with:
-          repository:  pynb-dag-runner/gha-build-and-publish-static-webui
-          ref: initial-setup
-          path: gha-build-and-publish-static-webui
+          path: foo
           persist-credentials: true
+
+      - uses: actions/checkout@v3
+        with:
+          repository: pynb-dag-runner/gha-build-and-publish-static-webui
+          path: gha-build-and-publish-static-webui
+          persist-credentials: false
 
       - name: "Build Docker file"
         working-directory: ${{ github.workspace }}/gha-build-and-publish-static-webui
