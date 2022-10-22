@@ -37,14 +37,13 @@ jobs:
                   -e GITHUB_TOKEN \
                   -e GITHUB_REPOSITORY \
               " \
-              DOCKER_COMMAND="\
+              DOCKER_COMMAND=" \
                   pip install pynb-dag-runner-snapshot==0.0.8.dev1665829343; \
                   static_builder \
                       --github_repository $GITHUB_REPOSITORY \
                       --output_dir /github_workspace/www-root/pipeline-artifacts/ \
                       --output_static_data_json /github_workspace/www-root/ui_static_data.json; \
               "
-          exit 1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
@@ -52,28 +51,17 @@ jobs:
         working-directory: ${{ github.workspace }}
         shell: bash
         run: |
-          make run[in-base-docker] \
-              EXTRA_FLAGS="\
+          make in-docker/run-command \
+              DOCKER_EXTRA_FLAGS="\
                   --volume ${{ github.workspace }}:/github_workspace \
               " \
-              COMMAND="\
+              DOCKER_COMMAND=" \
                   pip install pynb_dag_runner_webui \
                       --target /github_workspace/pynb_dag_runner_webui; \
                   cp -r \
                       /github_workspace/pynb_dag_runner_webui/assets/. \
                       /github_workspace/www-root/; \
               "
-
-      # ^ ------- This block fetches all logs and builds assets for static UI ---------^
-
-      - name: "debug: Store ui_static_data.json with data for UI"
-        uses: actions/upload-artifact@v2
-        with:
-          name: ui-static-data
-          path: |
-              ${{ github.workspace }}/www-root/ui_static_data.json
-          if-no-files-found: error
-          retention-days: 5
 
       ###
       ### Deploy UI + data
