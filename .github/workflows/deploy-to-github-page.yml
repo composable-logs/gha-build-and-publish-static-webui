@@ -24,6 +24,7 @@ jobs:
         working-directory: ${{ github.workspace }}/gha-build-and-publish-static-webui
         shell: bash
         run: |
+          ls -la .
           (cd docker; make build-docker-image)
 
       - name: "Fetch all artefacts into directory tree"
