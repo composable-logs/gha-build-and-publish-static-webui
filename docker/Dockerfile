@@ -1,5 +1,9 @@
 FROM ubuntu:20.04
 
+USER root
+
+# --- install base dependencies ---
+
 ENV DEBIAN_FRONTEND "noninteractive"
 
 RUN apt-get -qq -y update && \
@@ -7,8 +11,8 @@ RUN apt-get -qq -y update && \
     apt-get -qq -y install --no-install-recommends \
         python3 \
         python3-pip \
-        make && \
-    pip install --user pynb-dag-runner-snapshot==0.0.8.dev1665829343
+        make
+
 
 # --- add non-root user `host_user` ---
 
@@ -32,12 +36,29 @@ RUN if [ "$HOST_GID" = "" ] || [ "$HOST_UID" = "" ]; then \
         useradd --uid $HOST_UID --gid $HOST_GID -rm --shell /bin/bash host_user; \
     fi
 
-# -- install gha entrypoint script
+
+# --- install Python command line tool ---
+
+USER host_user
+
+# The below ensures that pip-installed command line tools are in path
+ENV PATH "/home/host_user/.local/bin:$PATH"
+
+RUN pip install --user pynb-dag-runner-snapshot==0.0.8.dev1665829343
+
+
+# --- install gha entrypoint script ---
+
+USER root
 
 COPY gha-entrypoint.sh /home/host_user/
 
-RUN chmod u+x /home/host_user/gha-entrypoint.sh
+RUN chmod +x /home/host_user/gha-entrypoint.sh
+
+
+# --- set username, default directory and 'docker run' entrypoint ---
 
 USER host_user
+WORKDIR /home/host_user/
 
 ENTRYPOINT ["/home/host_user/gha-entrypoint.sh"]
