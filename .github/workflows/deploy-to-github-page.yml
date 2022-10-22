@@ -24,21 +24,20 @@ jobs:
         working-directory: ${{ github.workspace }}/gha-build-and-publish-static-webui
         shell: bash
         run: |
-          ls -la .
           (cd docker; make build-docker-image)
 
       - name: "Fetch all artefacts into directory tree"
-        working-directory: ${{ github.workspace }}
+        working-directory: ${{ github.workspace }}/gha-build-and-publish-static-webui
         shell: bash
         run: |
           # GITHUB_REPOSITORY has format owner/repo-name.
-          make run[in-base-docker] \
-              EXTRA_FLAGS="\
+          make in-docker/run-command \
+              DOCKER_EXTRA_FLAGS="\
                   --volume ${{ github.workspace }}:/github_workspace \
                   -e GITHUB_TOKEN \
                   -e GITHUB_REPOSITORY \
               " \
-              COMMAND="\
+              DOCKER_COMMAND="\
                   pip install pynb-dag-runner-snapshot==0.0.8.dev1665829343; \
                   static_builder \
                       --github_repository $GITHUB_REPOSITORY \

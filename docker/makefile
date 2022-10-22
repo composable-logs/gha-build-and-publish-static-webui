@@ -10,3 +10,10 @@ build-docker-image:
 	    --build-arg HOST_GID="$$(id -g)" \
 	    --tag ${DOCKER_IMAGE_NAME} \
 	    .
+
+run-command:
+	docker run \
+	    --rm --tty --rm \
+	    ${DOCKER_EXTRA_FLAGS} \
+	    ${DOCKER_IMAGE_NAME} \
+	    "$(DOCKER_COMMAND)"
