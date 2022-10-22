@@ -1,0 +1,18 @@
+name: Deploy pynb-dag-runner static website
+description: NA
+
+inputs:
+  a-parameter:
+    description: test parameters
+    required: false
+    default: foo
+
+outputs:
+  one-output-value:
+    description: Description about output value
+
+runs:
+  using: docker
+  image: Dockerfile
+  args:
+    - ${{ inputs.a-parameter }}

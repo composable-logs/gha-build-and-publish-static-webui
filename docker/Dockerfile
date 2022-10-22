@@ -1,8 +1,5 @@
 FROM ubuntu:20.04
 
-ARG HOST_GID
-ARG HOST_UID
-
 ENV DEBIAN_FRONTEND "noninteractive"
 
 RUN apt-get -qq -y update && \
@@ -12,10 +9,27 @@ RUN apt-get -qq -y update && \
         python3-pip \
         make
 
-# Add user with same GID and UID as host user, so we can write files mounted into a container.
-# This is only needed in dev-setup.
-RUN groupadd --gid $HOST_GID host_user_group && \
-    useradd --uid $HOST_UID --gid $HOST_GID -rm --shell /bin/bash host_user
+# --- add non-root user `host_user` ---
+
+ARG HOST_GID
+ARG HOST_UID
+
+#
+# If HOST_GID and HOST_UID are provided:
+#   Add host_user with provided GID and UID.
+#   This is only needed in dev-setup so we can write files mounted into a container.
+#
+# Otherwise:
+#   use default GID and UID
+#
+RUN if [ -n $HOST_GID ] && [ -n $HOST_UID ]; then \
+        echo " *** Creating user host_user with UID=${HOST_UID} and GID=${HOST_GID} ..."; \
+        groupadd --gid $HOST_GID host_user_group; \
+        useradd --uid $HOST_UID --gid $HOST_GID -rm --shell /bin/bash host_user; \
+    else \
+        echo " *** Creating user host_user ..."; \
+        useradd -rm --shell /bin/bash host_user; \
+    fi
 
 USER host_user
 
