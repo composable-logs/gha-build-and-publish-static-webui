@@ -19,11 +19,10 @@ jobs:
     steps:
       - uses: actions/checkout@v3
         with:
-          path: foo
-          persist-credentials: true
-
-      - uses: actions/checkout@v3
-        with:
+          # Note: without repository argument we would checkout the caller repo.
+          #
+          # See:
+          #   https://stackoverflow.com/questions/71046096
           repository: pynb-dag-runner/gha-build-and-publish-static-webui
           path: gha-build-and-publish-static-webui
           persist-credentials: false
@@ -32,6 +31,7 @@ jobs:
         working-directory: ${{ github.workspace }}/gha-build-and-publish-static-webui
         shell: bash
         run: |
+          printenv
           (cd docker; make build-docker-image)
 
       - name: "Fetch all artefacts into directory tree"
