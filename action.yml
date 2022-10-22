@@ -5,15 +5,15 @@ on:
   workflow_call:
     inputs:
       a_parameter:
-        description: test parameters
+        #description: test parameters
         required: false
-        default: foo
+        #default: foo
         type: string
 
       pynb_dag_runner_ref:
-        description: Version of pynb-dag-runner to install
+        #description: Version of pynb-dag-runner to install
         required: false
-        default: pynb-dag-runner-snapshot
+        #default: pynb-dag-runner-snapshot
         type: string
 
 #outputs:
