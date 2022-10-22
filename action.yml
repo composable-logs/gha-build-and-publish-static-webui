@@ -1,5 +1,5 @@
 name: Deploy pynb-dag-runner static website
-description: NA
+#description: NA
 
 on:
   workflow_call:
@@ -23,9 +23,8 @@ on:
 jobs:
   deploy-static-website:
     runs-on: ubuntu-20:04
-    steps:
-    - shell: bash
-      run: echo Hello ${{ inputs.a_parameter }}.
+    timeout-minutes: 25
 
+    steps:
     - shell: bash
       run: echo Hello ${{ inputs.a_parameter }}.
