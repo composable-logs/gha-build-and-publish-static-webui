@@ -32,12 +32,12 @@ RUN if [ "$HOST_GID" = "" ] || [ "$HOST_UID" = "" ]; then \
         useradd --uid $HOST_UID --gid $HOST_GID -rm --shell /bin/bash host_user; \
     fi
 
-USER host_user
-
-# -- install entrypoint
+# -- install gha entrypoint script
 
 COPY gha-entrypoint.sh /home/host_user/
 
 RUN chmod u+x /home/host_user/gha-entrypoint.sh
+
+USER host_user
 
 ENTRYPOINT ["/home/host_user/gha-entrypoint.sh"]
