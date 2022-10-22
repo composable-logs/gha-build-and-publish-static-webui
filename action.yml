@@ -13,6 +13,6 @@ outputs:
 
 runs:
   using: docker
-  image: Dockerfile
+  image: docker/Dockerfile
   args:
     - ${{ inputs.a-parameter }}
