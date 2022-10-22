@@ -6,13 +6,17 @@ name: "Reusable workflow to update static website"
 
 on:
   workflow_call:
+    secrets:
+      # Token with write access to the caller repo
+      CALLER_ACTION_GITHUB_TOKEN:
+        required: true
 
 jobs:
   update-static-website:
     name: Build and deploy static website
     runs-on: ubuntu-20.04
-    steps:
 
+    steps:
       - uses: actions/checkout@v3
         with:
           repository:  pynb-dag-runner/gha-build-and-publish-static-webui
@@ -47,7 +51,8 @@ jobs:
                       --output_static_data_json /github_workspace/www-root/ui_static_data.json; \
               "
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          # any Github token would work here. Also secrets.GITHUB_TOKEN
+          GITHUB_TOKEN: ${{ secrets.CALLER_ACTION_GITHUB_TOKEN }}
 
       - name: "pip install package with static assets for web front end"
         working-directory: ${{ github.workspace }}/gha-build-and-publish-static-webui
@@ -89,5 +94,5 @@ jobs:
           git commit -m "update"
 
           git push --force \
-            https://my_token_user:${{ secrets.GITHUB_TOKEN }}@github.com/${GITHUB_REPOSITORY}.git \
+            https://my_token_user:${{ secrets.CALLER_ACTION_GITHUB_TOKEN }}@github.com/${GITHUB_REPOSITORY}.git \
             gh-pages:gh-pages
