@@ -22,13 +22,13 @@ ARG HOST_UID
 # Otherwise:
 #   use default GID and UID
 #
-RUN if [ -n $HOST_GID ] && [ -n $HOST_UID ]; then \
+RUN if [ "$HOST_GID" = "" ] || [ "$HOST_UID" = "" ]; then \
+        echo " *** Creating user host_user ..."; \
+        useradd -rm --shell /bin/bash host_user; \
+    else \
         echo " *** Creating user host_user with UID=${HOST_UID} and GID=${HOST_GID} ..."; \
         groupadd --gid $HOST_GID host_user_group; \
         useradd --uid $HOST_UID --gid $HOST_GID -rm --shell /bin/bash host_user; \
-    else \
-        echo " *** Creating user host_user ..."; \
-        useradd -rm --shell /bin/bash host_user; \
     fi
 
 USER host_user
