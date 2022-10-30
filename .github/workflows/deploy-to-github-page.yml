@@ -6,6 +6,26 @@ name: "Reusable workflow to deploy static website"
 
 on:
   workflow_call:
+    inputs:
+      #
+      # The optional inputs
+      #
+      #  - pynb-dag-runner-package
+      #  - pynb-dag-runner-webui-package
+      #
+      # allow the caller to override which versions of pynb-dag-runner{-webui} packages
+      # to use when building the webui. By default, use the latest published versions.
+      #
+      pynb-dag-runner-package:
+        required: false
+        default: pynb-dag-runner
+        type: string
+
+      pynb-dag-runner-webui-package:
+        required: false
+        default: pynb-dag-runner-webui
+        type: string
+
     secrets:
       # Token with write access to the caller repo
       CALLER_ACTION_GITHUB_TOKEN:
@@ -30,7 +50,7 @@ jobs:
         run: |
           pip install \
               --quiet \
-              pynb-dag-runner
+              ${{ inputs.pynb-dag-runner-package }}
 
           static_builder \
               --github_repository $GITHUB_REPOSITORY \
@@ -45,7 +65,7 @@ jobs:
         run: |
           pip install \
               --quiet \
-              pynb_dag_runner_webui \
+              ${{ inputs.pynb-dag-runner-webui-package }} \
               --target ${{ github.workspace }}/pynb_dag_runner_webui
 
           cp -r \
