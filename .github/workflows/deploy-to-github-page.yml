@@ -30,7 +30,7 @@ jobs:
         run: |
           pip install \
               --quiet \
-              pynb-dag-runner-snapshot==0.0.8.dev1665829343
+              pynb-dag-runner
 
           static_builder \
               --github_repository $GITHUB_REPOSITORY \
