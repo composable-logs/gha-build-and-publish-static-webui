@@ -52,10 +52,9 @@ jobs:
               --quiet \
               ${{ inputs.pynb-dag-runner-package }}
 
-          static_builder \
+          generate_static_data \
               --github_repository $GITHUB_REPOSITORY \
-              --output_dir ${{ github.workspace }}/www-root/pipeline-artifacts/ \
-              --output_static_data_json ${{ github.workspace }}/www-root/ui_static_data.json
+              --output_www_root_directory ${{ github.workspace }}/www-root/
 
         env:
           # any Github token would work here. Also secrets.GITHUB_TOKEN
