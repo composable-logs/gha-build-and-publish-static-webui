@@ -48,10 +48,14 @@ jobs:
 
       - name: "Fetch all artefacts into directory tree"
         run: |
+          echo "Installing ${{ inputs.pynb-dag-runner-package }} ..."
           pip install \
-              --quiet \
               ${{ inputs.pynb-dag-runner-package }}
+              
+          echo "Installed Python packages"
+          pip freeze
 
+          echo "generate_static_data ..."
           generate_static_data \
               --github_repository $GITHUB_REPOSITORY \
               --output_www_root_directory ${{ github.workspace }}/www-root/
