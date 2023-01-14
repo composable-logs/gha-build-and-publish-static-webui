@@ -10,20 +10,20 @@ on:
       #
       # The optional inputs
       #
-      #  - pynb-dag-runner-package
-      #  - pynb-dag-runner-webui-package
+      #  - composable-logs-package
+      #  - composable-logs-webui-package
       #
-      # allow the caller to override which versions of pynb-dag-runner{-webui} packages
+      # allow the caller to override which versions of composable-logs{-webui} packages
       # to use when building the webui. By default, use the latest published versions.
       #
-      pynb-dag-runner-package:
+      composable-logs-package:
         required: false
-        default: pynb-dag-runner
+        default: composable-logs
         type: string
 
-      pynb-dag-runner-webui-package:
+      composable-logs-webui-package:
         required: false
-        default: pynb-dag-runner-webui
+        default: composable-logs-webui
         type: string
 
     secrets:
@@ -48,10 +48,10 @@ jobs:
 
       - name: "Fetch all artefacts into directory tree"
         run: |
-          echo "Installing ${{ inputs.pynb-dag-runner-package }} ..."
+          echo "Installing ${{ inputs.composable-logs-package }} ..."
           pip install \
-              ${{ inputs.pynb-dag-runner-package }}
-              
+              ${{ inputs.composable-logs-package }}
+
           echo "Installed Python packages"
           pip freeze
 
@@ -68,11 +68,11 @@ jobs:
         run: |
           pip install \
               --quiet \
-              ${{ inputs.pynb-dag-runner-webui-package }} \
-              --target ${{ github.workspace }}/pynb_dag_runner_webui
+              ${{ inputs.composable-logs-webui-package }} \
+              --target ${{ github.workspace }}/composable-logs-webui
 
           cp -r \
-              ${{ github.workspace }}/pynb_dag_runner_webui/assets/. \
+              ${{ github.workspace }}/composable-logs-webui/assets/. \
               ${{ github.workspace }}/www-root/
 
 
